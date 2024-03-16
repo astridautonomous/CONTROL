@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 from traj import TrajectoryProcess
 
 refpose123=np.linspace([0,0],[10000,10000],10001)
@@ -13,11 +12,11 @@ class Vehicle():
         # ==================================
         self.motor_lookup_rpm = [929.7, 1156.19, 1451.5, 1485.38, 1550, 1625, 1735, 1881, 1938, 2023, 2250, 2375, 2439, 2500, 2600, 2750, 3000, 3200, 3400, 3500, 3700, 3800, 3875, 3950, 4057, 4270, 4287, 4296, 5362.88]
         self.motor_lookup_tork = [41.164, 34.44, 28.24, 26.256, 23.304, 20.008, 18.204, 16.4, 15.088, 13.94, 12.464, 11.316, 10.004, 9.02, 7.708, 6.888, 5.904, 5.084, 4.264, 3.608, 2.788, 2.296, 1.804, 1.476, 1.148, 0.984, 0.954, 0.82, 0.2]
-        self.xc = 50
-        self.yc = 0
-        self.theta = 0
+        self.xc = 2000
+        self.yc = 100
+        self.theta = np.pi/6
         self.delta = 0
-        
+        self.ref_v = 12
         self.L = 1.5
 
 
@@ -37,11 +36,12 @@ class Vehicle():
         
         
         # State variables
-        self.v = 100
+        self.v = 8
         self.a = 0
         self.motor_rpm=0
         
         self.sample_time = 0.01
+        self.v_error = self.ref_v - self.v
         
     def reset(self):
         # reset state variables
@@ -52,6 +52,7 @@ class Vehicle():
         self.yc = 0
         self.theta = 0
         self.delta = 0
+        self.v_error
 
     def step(self, throttle, delta, alpha):
         # ==================================
@@ -67,8 +68,8 @@ class Vehicle():
         self.a=(((T_e * self.diff_r * self.gear_eff) / self.r_e) - F_load)/self.m
 
         #since v = a*t
-        # self.v += self.a * self.sample_time
-        self.v = 5
+        self.v += self.a * self.sample_time
+        self.v_error += self.ref_v - self.v
         #since x = v*t - (1/2)*a*t^2
         self.xc += self.v * np.cos(self.theta) * self.sample_time
         self.yc += self.v * np.sin(self.theta) * self.sample_time
@@ -79,8 +80,8 @@ class Vehicle():
         self.motor_rpm = max(600, min(self.tire_rpm * self.diff_r, 6000))
 
 
-sample_time = 0.01
-time_end = 50
+sample_time = 0.0001
+time_end = 8
 model = Vehicle()
 
 
@@ -95,7 +96,6 @@ x_data = np.zeros_like(t_data)
 y_data = np.zeros_like(t_data)
 
 # throttle percentage between 0 and 1
-throttle = 0.2
 
 # incline angle (in radians)
 alpha = 0
@@ -104,8 +104,10 @@ for i in range(t_data.shape[0]):
     x_data[i] = model.xc
     y_data[i] = model.yc
     print("v:",model.v)
+    throttle = kontrol.pidcontrol(model.v_error, model.sample_time)
     delta = kontrol.process_poses_stanley([model.xc,model.yc],model.theta,model.v)
     model.step(throttle,delta, alpha)
+    print(throttle)
 
     
 plt.plot(x_data,y_data)

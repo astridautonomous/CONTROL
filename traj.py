@@ -9,8 +9,12 @@ class TrajectoryProcess:
         self.segmentsize=50
         self.i=0
         self.min_distance_index=0
-        self.k_st=10
+        self.k_st=0.3
         self.incstep = 30
+        self.k_p=1
+        self.k_i=1
+        self.k_d=0.05
+
     def calculate_min_distance(self,currentpose):
         distances=np.linalg.norm(self.refpose[self.i:self.i+self.segmentsize,:]-currentpose,axis=1)
         self.min_distance_index=np.argmin(distances)
@@ -64,6 +68,13 @@ class TrajectoryProcess:
         if self.min_distance_index == self.segmentsize-1:
             self.i+=self.incstep
         return steercmd
+    
+    def pidcontrol(self,v_error,sample_time):
+        desired_accel= (self.k_p * v_error) + (self.k_i * v_error * sample_time) + (self.k_d * v_error / sample_time)
+        throttle = max(0, min(desired_accel, 1))
+        return throttle
+
+        
     
 # if __name__ == "__main__":       
 #     deneme=TrajectoryProcess(refposedeneme)
