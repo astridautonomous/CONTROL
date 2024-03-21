@@ -12,12 +12,14 @@ class Vehicle():
         # ==================================
         self.motor_lookup_rpm = [929.7, 1156.19, 1451.5, 1485.38, 1550, 1625, 1735, 1881, 1938, 2023, 2250, 2375, 2439, 2500, 2600, 2750, 3000, 3200, 3400, 3500, 3700, 3800, 3875, 3950, 4057, 4270, 4287, 4296, 5362.88]
         self.motor_lookup_tork = [41.164, 34.44, 28.24, 26.256, 23.304, 20.008, 18.204, 16.4, 15.088, 13.94, 12.464, 11.316, 10.004, 9.02, 7.708, 6.888, 5.904, 5.084, 4.264, 3.608, 2.788, 2.296, 1.804, 1.476, 1.148, 0.984, 0.954, 0.82, 0.2]
-        self.xc = 2000
-        self.yc = 100
-        self.theta = np.pi/6
+        self.xc = -20
+        self.yc = 0
+        self.theta = -np.pi
         self.delta = 0
         self.ref_v = 12
         self.L = 1.5
+        self.steer_pose = 0
+        self.step_rpm = 1000
 
 
         # Gear ratio, effective radius, mass + inertia
@@ -36,11 +38,11 @@ class Vehicle():
         
         
         # State variables
-        self.v = 8
+        self.v = 20
         self.a = 0
         self.motor_rpm=0
         
-        self.sample_time = 0.01
+        self.sample_time = 0.1
         self.v_error = self.ref_v - self.v
         
     def reset(self):
@@ -52,7 +54,7 @@ class Vehicle():
         self.yc = 0
         self.theta = 0
         self.delta = 0
-        self.v_error
+        self.v_error = 0
 
     def step(self, throttle, delta, alpha):
         # ==================================
@@ -66,22 +68,34 @@ class Vehicle():
         F_load = F_aero + R_x + F_g
         #torque equation (angular acceleration)
         self.a=(((T_e * self.diff_r * self.gear_eff) / self.r_e) - F_load)/self.m
-
+    
         #since v = a*t
         self.v += self.a * self.sample_time
         self.v_error += self.ref_v - self.v
-        #since x = v*t - (1/2)*a*t^2
+        #model
         self.xc += self.v * np.cos(self.theta) * self.sample_time
         self.yc += self.v * np.sin(self.theta) * self.sample_time
-        self.theta += (self.v / self.L) * np.tan(delta) * self.sample_time
-        
+        #SteerModel
+        steer_error = self.steer_pose - delta
+        w = 2 * np.pi * self.step_rpm / 60
+        step_w = w * self.sample_time
+        if abs(steer_error) > step_w:
+            if steer_error<0:
+                self.steer_pose += step_w
+            else:
+                self.steer_pose -= step_w
+        else:
+            self.steer_pose -= steer_error
+
+        self.theta += (self.v / self.L) * np.tan(self.steer_pose) * self.sample_time
+
         #tire velocity to RPM
         self.tire_rpm = (self.v * 60)/(2*np.pi*self.r_e)
         self.motor_rpm = max(600, min(self.tire_rpm * self.diff_r, 6000))
 
 
-sample_time = 0.0001
-time_end = 8
+sample_time = 1
+time_end = 60
 model = Vehicle()
 
 
@@ -90,7 +104,7 @@ print(refpose123)
 
 kontrol=TrajectoryProcess(refpose123)
 
-t_data = np.arange(0,time_end,sample_time)
+t_data = np.arange(0,time_end,model.sample_time/100)
 v_data = np.zeros_like(t_data)
 x_data = np.zeros_like(t_data)
 y_data = np.zeros_like(t_data)
@@ -103,12 +117,11 @@ for i in range(t_data.shape[0]):
     v_data[i] = model.v
     x_data[i] = model.xc
     y_data[i] = model.yc
-    print("v:",model.v)
     throttle = kontrol.pidcontrol(model.v_error, model.sample_time)
     delta = kontrol.process_poses_stanley([model.xc,model.yc],model.theta,model.v)
-    model.step(throttle,delta, alpha)
-    print(throttle)
 
+    model.step(throttle, delta, alpha)
+print("v:",model.v)
     
 plt.plot(x_data,y_data)
 plt.plot(refpose123)

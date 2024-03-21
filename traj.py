@@ -9,7 +9,7 @@ class TrajectoryProcess:
         self.segmentsize=50
         self.i=0
         self.min_distance_index=0
-        self.k_st=0.3
+        self.k_st=0.25
         self.incstep = 30
         self.k_p=1
         self.k_i=1
@@ -39,7 +39,7 @@ class TrajectoryProcess:
         if heading_error < - np.pi:
             heading_error+= 2 * np.pi
         
-        print(heading_error)
+        # print(heading_error)
         ########
         ####      crosstrack calcs
         yaw_cross_track = np.arctan2(currentpose[1]-self.refpose[self.i+self.min_distance_index][1], currentpose[0]-self.refpose[self.i+self.min_distance_index][0])
