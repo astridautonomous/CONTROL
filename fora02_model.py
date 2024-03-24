@@ -12,14 +12,14 @@ class Vehicle():
         # ==================================
         self.motor_lookup_rpm = [929.7, 1156.19, 1451.5, 1485.38, 1550, 1625, 1735, 1881, 1938, 2023, 2250, 2375, 2439, 2500, 2600, 2750, 3000, 3200, 3400, 3500, 3700, 3800, 3875, 3950, 4057, 4270, 4287, 4296, 5362.88]
         self.motor_lookup_tork = [41.164, 34.44, 28.24, 26.256, 23.304, 20.008, 18.204, 16.4, 15.088, 13.94, 12.464, 11.316, 10.004, 9.02, 7.708, 6.888, 5.904, 5.084, 4.264, 3.608, 2.788, 2.296, 1.804, 1.476, 1.148, 0.984, 0.954, 0.82, 0.2]
-        self.xc = -20
+        self.xc = 0
         self.yc = 0
-        self.theta = -np.pi
+        self.theta = 0 
         self.delta = 0
         self.ref_v = 12
         self.L = 1.5
         self.steer_pose = 0
-        self.step_rpm = 1000
+        self.step_rpm = 684
 
 
         # Gear ratio, effective radius, mass + inertia
@@ -38,7 +38,7 @@ class Vehicle():
         
         
         # State variables
-        self.v = 20
+        self.v = 0
         self.a = 0
         self.motor_rpm=0
         
@@ -97,10 +97,6 @@ class Vehicle():
 sample_time = 1
 time_end = 60
 model = Vehicle()
-
-
-
-print(refpose123)
 
 kontrol=TrajectoryProcess(refpose123)
 
