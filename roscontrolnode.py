@@ -22,7 +22,7 @@ def velocity_callback(data):
 
 def pose_callback(data):
     global current_pose
-    global yaw
+    global yaw  #rad
     _, _, yaw = quat2euler(
         [data.pose.pose.orientation.w,
         data.pose.pose.orientation.x,
@@ -32,7 +32,7 @@ def pose_callback(data):
     msg = CarlaEgoVehicleControl()
     steercmd = TrajectoryProcess(refposedeneme).process_poses_stanley(current_pose, yaw, current_velocity)
 
-    v_error = 10 - current_velocity
+    v_error = 2.77 - current_velocity ## m/s
     brakecmd=TrajectoryProcess(refposedeneme).pidbrake(v_error,0.1)
     throttlecmd = TrajectoryProcess(refposedeneme).pidthrottle(v_error,0.1)
     
