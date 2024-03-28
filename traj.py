@@ -14,6 +14,9 @@ class TrajectoryProcess:
         self.k_p=1
         self.k_i=1
         self.k_d=0.05
+        self.k_p_b=1
+        self.k_i_b=1
+        self.k_d_b=0.05
 
     def calculate_min_distance(self,currentpose):
         distances=np.linalg.norm(self.refpose[self.i:self.i+self.segmentsize,:]-currentpose,axis=1)
@@ -85,9 +88,9 @@ class TrajectoryProcess:
         return throttle
     
     def pidbrake(self,v_error,sample_time):
-        desired_accel= (self.k_p * v_error) + (self.k_i * v_error * sample_time) + (self.k_d * v_error / sample_time)
+        desired_accel= (self.k_p_b * v_error) + (self.k_i_b * v_error * sample_time) + (self.k_d_b * v_error / sample_time)
         
-        if desired_accel < 0:
+        if desired_accel < -2:
             brake = max(0, min(abs(desired_accel), 1))
 
         else :
