@@ -9,7 +9,7 @@ class TrajectoryProcess:
         self.segmentsize=50
         self.i=0
         self.min_distance_index=0
-        self.k_st=0.25
+        self.k_st=2.5
         self.incstep = 30
         self.k_p=1
         self.k_i=1
@@ -23,7 +23,12 @@ class TrajectoryProcess:
     
         
     def calculate_heading(self):
-        ref_heading=np.arctan(self.refpose[self.i+1,1]-self.refpose[self.i,1])/(self.refpose[self.i+1,0]-self.refpose[self.i,0])
+        if self.refpose[self.i+1,0] - self.refpose[self.i,0] != 0:
+            ref_heading = np.arctan((self.refpose[self.i+1,1] - self.refpose[self.i,1]) / (self.refpose[self.i+1,0] - self.refpose[self.i,0]))
+        else:
+        # Handle the case where the divisor is zero
+            ref_heading = np.pi / 2  # For example, set ref_heading to a default value or handle it according to your application's logic
+
         #current heading is measured from car's sensors
         
         return ref_heading
@@ -69,11 +74,26 @@ class TrajectoryProcess:
             self.i+=self.incstep
         return steercmd
     
-    def pidcontrol(self,v_error,sample_time):
+    def pidthrottle(self,v_error,sample_time):
         desired_accel= (self.k_p * v_error) + (self.k_i * v_error * sample_time) + (self.k_d * v_error / sample_time)
-        throttle = max(0, min(desired_accel, 1))
+        if desired_accel > 0:
+            throttle = max(0, min(desired_accel, 1))
+            
+        else:
+            throttle = 0
+            
         return throttle
+    
+    def pidbrake(self,v_error,sample_time):
+        desired_accel= (self.k_p * v_error) + (self.k_i * v_error * sample_time) + (self.k_d * v_error / sample_time)
+        
+        if desired_accel < 0:
+            brake = max(0, min(abs(desired_accel), 1))
 
+        else :
+            brake = 0
+        
+        return brake
         
     
 # if __name__ == "__main__":       
