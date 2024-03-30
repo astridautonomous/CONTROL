@@ -69,8 +69,8 @@ class TrajectoryProcess:
             steercmd -= 2 * np.pi
         if steercmd < - np.pi:
             steercmd += 2 * np.pi
-        steercmd = min(1.22, steercmd)
-        steercmd = max(-1.22, steercmd)
+        steercmd = steercmd / (np.pi * 1,285)
+
         # delta=max(-np.pi/6, min(steercmd,np.pi/6))
         # print(delta)
         if self.min_distance_index == self.segmentsize-1:
