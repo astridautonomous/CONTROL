@@ -1,0 +1,1 @@
+/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/share/roseus/ros/st_pid/msg/Path.l

@@ -1,0 +1,8 @@
+prefix=/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid
+
+Name: st_pid
+Description: Description of st_pid
+Version: 0.0.0
+Cflags: -I/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime

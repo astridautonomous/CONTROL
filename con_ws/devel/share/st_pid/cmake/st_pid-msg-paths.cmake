@@ -1,0 +1,1 @@
+/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/share/st_pid/cmake/st_pid-msg-paths.cmake

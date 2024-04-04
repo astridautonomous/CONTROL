@@ -1,0 +1,8 @@
+prefix=/home/yorgundemokrat/Desktop/CONTROL/con_ws/install
+
+Name: st_pid
+Description: Description of st_pid
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime
