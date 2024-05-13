@@ -10,7 +10,6 @@ class TrajectoryProcess:
         self.i=0
         self.min_distance_index=0
         self.k_st=2.5
-        self.incstep = 30
         self.k_p=1
         self.k_i=1
         self.k_d=0.05
@@ -78,8 +77,7 @@ class TrajectoryProcess:
         print("Current segment",self.refpose[self.i:self.i+self.segmentsize])
         print("self.i",self.i)
         print("segment_size",self.segmentsize)
-        if self.min_distance_index == self.segmentsize-1:
-            self.i+=self.incstep
+        self.i += self.min_distance_index + 1
         return steercmd
     
     def pidthrottle(self,v_error,sample_time):
