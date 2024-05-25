@@ -8,7 +8,7 @@ from nav_msgs.msg import Odometry
 from traj import TrajectoryProcess
 import numpy as np
 import sys
-sys.path.append("/home/yorgundemokrat/Desktop/NAVIGATION/nav_ws/src")
+sys.path.append("/home/ege/astrid/NAVIGATION/nav_ws/src")
 # from navigation.msg import Path
 from st_pid.msg import Path
 # from deneme.msg import deneme
@@ -42,25 +42,28 @@ def pose_callback(data):
     global current_pose
     global yaw  #rad
     global vehicle
+    
     _, _, yaw = quat2euler(
         [data.pose.pose.orientation.w,
         data.pose.pose.orientation.x,
         data.pose.pose.orientation.y,
         data.pose.pose.orientation.z])
     current_pose = np.array([data.pose.pose.position.x, data.pose.pose.position.y])
-    current_pose = mapToImg(current_pose)
+    print("data.pose.pose.position.x",data.pose.pose.position.x)
+    print("data.pose.pose.orientation.x",data.pose.pose.orientation.x)
     msg = CarlaEgoVehicleControl()
     print("current pose",current_pose)
     steercmd = vehicle.process_poses_stanley(current_pose, yaw, current_velocity)
 
-    v_error = 5 - current_velocity ## m/s
+    v_error = 1.4 - current_velocity ## m/s
     brakecmd= vehicle.pidbrake(v_error,0.1)
     throttlecmd = vehicle.pidthrottle(v_error,0.1)
     
     msg.brake = brakecmd
     msg.throttle = throttlecmd
-    msg.steer = steercmd/3.1
+    msg.steer = steercmd
     print("steercmd",msg.steer)
+    print("min_distance_idx",vehicle.min_distance_index)
     pub.publish(msg)
 
 if __name__ == "__main__":
