@@ -60,19 +60,11 @@ static void MX_TIM2_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-//uint8_t gelen_data = 0;
-//uint8_t giden_data= 0;
-
+//I2C data receive code//
 #define DATA_SIZE 7
-
-uint8_t dataToSend[DATA_SIZE];
-
+uint8_t dataToGet[DATA_SIZE];
 uint8_t count=0;
 
-//#define RxSIZE 7
-//uint8_t RxData[RxSIZE] = {250, 20};
-
-//RxData[3]=1;
 //uint8_t rxcount = 8;
 
 /* USER CODE END 0 */
@@ -120,43 +112,10 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-//	  HAL_I2C_Master_Receive(&hi2c1, 78 << 1, &gelen_data, 1, 100);
-//
-//	  giden_data= (gelen_data * 255) / 99;
-//
-//	  HAL_I2C_Master_Transmit(&hi2c1, 78 << 1, &giden_data, 1, 100);
-
-
-//	  uint8_t data[] = "Hello";
-//
-//	  HAL_I2C_Master_Transmit(&hi2c1, 78, data, sizeof(data), HAL_MAX_DELAY);
-//	  HAL_Delay(1000);
-
-
-//	  HAL_I2C_Slave_Transmit_IT(&hi2c1, data, DATA_SIZE); // Veri aktarımını başlat
-//	  HAL_Delay(1000);
-//
-//	  HAL_I2C_Slave_Transmit(&hi2c1, txBuffer, DATA_SIZE, HAL_MAX_DELAY);
-//	  HAL_Delay(1000);
-//	  &hi2c1, data, DATA_SIZE, HAL_MAX_DELAY
-//	  HAL_I2C_Slave_Transmit(&hi2c1, txBuffer, DATA_SIZE, HAL_MAX_DELAY);
-
-
-//	  rxcount++;
-//
-//	  if (rxcount++ >= 8)
-//	  {
-//		  rxcount = 0;+rxcount
-//	  }
-
-//	 	  HAL_I2C_Slave_Transmit(&hi2c1, RxData, RxSIZE, HAL_MAX_DELAY);
-
-//		HAL_I2C_Slave_Transmit_IT(&hi2c1, txBuffer, sizeof(txBuffer));
-// HAL_I2C_Slave_Receive(&hi2c1, pData, Size, Timeout)
-	  HAL_I2C_Slave_Receive(&hi2c1, dataToSend, DATA_SIZE, 1000);
-if(HAL_I2C_Slave_Receive(&hi2c1, dataToSend, DATA_SIZE, 1000)== 1)
+HAL_I2C_Slave_Receive(&hi2c1, dataToGet, DATA_SIZE, 1000);
+if(HAL_I2C_Slave_Receive(&hi2c1, dataToGet, DATA_SIZE, 1000)== 1)
 {
-count++;
+     count++;
 }
 
 
