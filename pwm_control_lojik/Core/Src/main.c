@@ -94,7 +94,7 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
- HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET); //in NVIC settings we should open capture compare interrupt enabled for set the direction
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET); //in NVIC settings capture compare interrupt should be enabled for set the direction
   TIM1->CCR1 = 600;
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_Delay(5000);
