@@ -121,16 +121,18 @@ int main(void)
   while (1)
   {
 
-	  if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_2) == GPIO_PIN_RESET)
+	  
+	  current_time = __HAL_TIM_GET_COUNTER(&htim2);//saniyeyi sayma başlıyor
+	  
+	  if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_2) == GPIO_PIN_RESET) //sensör 0 ise okuma yapıyır
 		  {
 		  	  sayac++;
 		  	  HAL_Delay(100);
 
 		  }
 
-	  current_time = __HAL_TIM_GET_COUNTER(&htim2);
 
-	  if (current_time == 59999)
+	  if (current_time == 59999)//1 dk olursa sıfırlıyor
 	  {
 		  sayac=0;
 		  current_time=0;
