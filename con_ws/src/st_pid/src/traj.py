@@ -3,6 +3,7 @@ import numpy as np
 class TrajectoryProcess:
     def __init__(self, refpose):
         self.refpose = refpose
+        self.ref_headings = []
         self.min_distance_index = 0
         self.k_st = 1.5
         self.k_p = 1
@@ -19,13 +20,13 @@ class TrajectoryProcess:
         return np.amin(distances)
 
     def calculate_headings(self):
-        ref_headings = []
         for i in range(len(self.refpose) - 1):
             heading = np.arctan2(self.refpose[i+1, 1] - self.refpose[i, 1], self.refpose[i+1, 0] - self.refpose[i, 0])
-            ref_headings.append(heading)
+            self.ref_headings.append(heading)
         # Optionally, set the last heading to be the same as the second last
-        ref_headings.append(ref_headings[-1])  # Assume last heading continues in same direction
-        return np.array(ref_headings)
+        self.ref_headings.append(self.ref_headings[-1])  # Assume last heading continues in same direction
+        self.ref_headings = np.array(self.ref_headings)
+        return self.ref_headings
 
     def normalize_angle(self, angle):
         angle = np.degrees(angle)
@@ -37,13 +38,13 @@ class TrajectoryProcess:
 
     def process_poses_stanley(self, currentpose, current_heading, v):
         cross_track_error = self.calculate_min_distance(currentpose)
-        ref_headings = self.calculate_headings()
+        # ref_headings = self.calculate_headings()
 
         # Ensure the min_distance_index is within the bounds of ref_headings
-        if self.min_distance_index >= len(ref_headings):
-            self.min_distance_index = len(ref_headings) - 1
+        if self.min_distance_index >= len(self.ref_headings):
+            self.min_distance_index = len(self.ref_headings) - 1
 
-        ref_heading = ref_headings[self.min_distance_index]
+        ref_heading = self.ref_headings[self.min_distance_index]
         ref_heading = self.normalize_angle(ref_heading)
 
         yaw_cross_track = np.arctan2(currentpose[1] - self.refpose[self.min_distance_index+1][1], 
