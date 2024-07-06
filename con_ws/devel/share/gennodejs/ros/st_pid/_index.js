@@ -1,1 +1,6 @@
-/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/share/gennodejs/ros/st_pid/_index.js
+
+"use strict";
+
+module.exports = {
+  msg: require('./msg/_index.js'),
+};

@@ -1,22 +1,46 @@
 import numpy as np
+from scipy.interpolate import CubicSpline
 
 class TrajectoryProcess:
     def __init__(self, refpose):
         self.refpose = refpose
         self.ref_headings = []
         self.min_distance_index = 0
-        self.k_st = 1.5
+        self.k_st = 1.7
         self.k_p = 1
         self.k_i = 1
         self.k_d = 0.05
         self.k_p_b = 1
         self.k_i_b = 1
         self.k_d_b = 0.05
+        self.interpolate_refpose()
+        self.calculate_headings()
+
+    def interpolate_refpose(self, num_points=100): # Interpolate the reference path [Num_points: Number of points to interpolate] will asign 100 as default
+        # Extract x and y coordinates
+        x = self.refpose[:, 0]
+        y = self.refpose[:, 1]
+        
+        # Create a parameter t for the points
+        t = np.arange(len(x))
+        
+        # Create the cubic spline interpolations
+        cs_x = CubicSpline(t, x)
+        cs_y = CubicSpline(t, y)
+        
+        # Generate new interpolated points
+        t_new = np.linspace(0, len(x) - 1, num_points)
+        x_new = cs_x(t_new)
+        y_new = cs_y(t_new)
+        
+        # Update refpose with interpolated points
+        self.refpose = np.vstack((x_new, y_new)).T
+    
 
     def calculate_min_distance(self, currentpose):
         distances = np.linalg.norm(self.refpose - currentpose, axis=1)
         self.min_distance_index = np.argmin(distances)
-        print("min_distance", np.amin(distances))
+        # print("min_distance", np.amin(distances))
         return np.amin(distances)
 
     def calculate_headings(self):
@@ -47,32 +71,34 @@ class TrajectoryProcess:
         ref_heading = self.ref_headings[self.min_distance_index]
         ref_heading = self.normalize_angle(ref_heading)
 
+        print("ref_pose", self.refpose)
+        
         yaw_cross_track = np.arctan2(currentpose[1] - self.refpose[self.min_distance_index+1][1], 
                                 currentpose[0] - self.refpose[self.min_distance_index+1][0])
         yaw_path2ct = ref_heading - yaw_cross_track
-        print("yaw_cross_track", np.rad2deg(yaw_cross_track))
+        # print("yaw_cross_track", np.rad2deg(yaw_cross_track))
         yaw_path2ct = -self.normalize_angle(yaw_path2ct)
         
         if yaw_path2ct > 0:
             cross_track_error = abs(cross_track_error)
         else:
             cross_track_error = -abs(cross_track_error)
-        print("cross_track_error", cross_track_error)
+        # print("cross_track_error", cross_track_error)
 
         # Heading error calculation
         heading_error = ref_heading - current_heading
         heading_error = -self.normalize_angle(heading_error)
-        print("heading_error", np.rad2deg(heading_error))
+        # print("heading_error", np.rad2deg(heading_error))
 
         # Steering command calculation
         steercmd = heading_error + np.arctan2((self.k_st * cross_track_error), (v + 0.00001))
         steercmd = self.normalize_angle(steercmd)
         steercmd = steercmd / np.pi
 
-        print(f"Current Pose: {currentpose}, Ref Pose : {self.refpose[self.min_distance_index]} Ref Heading: {np.rad2deg(ref_heading)}")
-        print(f"Cross Track Error: {cross_track_error}, Heading Error: {np.rad2deg(heading_error)}")
-        print(f"Steering Command: {steercmd}")
-        print(f"Current Heading: {np.rad2deg(current_heading)}")
+        # print(f"Current Pose: {currentpose}, Ref Pose : {self.refpose[self.min_distance_index]} Ref Heading: {np.rad2deg(ref_heading)}")
+        # print(f"Cross Track Error: {cross_track_error}, Heading Error: {np.rad2deg(heading_error)}")
+        # print(f"Steering Command: {steercmd}")
+        # print(f"Current Heading: {np.rad2deg(current_heading)}")
         return steercmd
 
     def pidthrottle(self, v_error, sample_time):

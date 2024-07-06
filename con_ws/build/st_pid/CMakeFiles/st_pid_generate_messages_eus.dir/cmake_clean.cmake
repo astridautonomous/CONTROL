@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
-  "/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/share/roseus/ros/st_pid/manifest.l"
-  "/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/share/roseus/ros/st_pid/msg/Pat.l"
-  "/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/share/roseus/ros/st_pid/msg/Path.l"
+  "/home/ege/astrid/CONTROL/con_ws/devel/share/roseus/ros/st_pid/manifest.l"
+  "/home/ege/astrid/CONTROL/con_ws/devel/share/roseus/ros/st_pid/msg/Pat.l"
+  "/home/ege/astrid/CONTROL/con_ws/devel/share/roseus/ros/st_pid/msg/Path.l"
   "CMakeFiles/st_pid_generate_messages_eus"
 )
 

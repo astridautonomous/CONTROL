@@ -11,12 +11,7 @@ import sys
 sys.path.append("/home/ege/astrid/NAVIGATION/nav_ws/src")
 # from navigation.msg import Path
 from st_pid.msg import Path
-# from deneme.msg import deneme
-#example trajectory
-# start_point = np.array([-27, -69])
-# end_point = np.array([-15, -69])
 
-# refposedeneme = np.linspace(start_point, end_point, 300)
 
 def mapToImg(coord):
     return [coord[1]+190,coord[0]+162]
@@ -76,10 +71,13 @@ if __name__ == "__main__":
         rate.sleep()
         if len(refposedeneme) > 0:
             break
+    
+    vehicle = TrajectoryProcess(refposedeneme)
+    
     while(rospy.is_shutdown != True):
-        vehicle = TrajectoryProcess(refposedeneme)
         sub1 = rospy.Subscriber("/carla/ego_vehicle/odometry", Odometry, callback=pose_callback)
         sub2 = rospy.Subscriber("/carla/ego_vehicle/vehicle_status", CarlaEgoVehicleStatus, callback=velocity_callback)
         rospy.loginfo("Node has been started!")
         pub = rospy.Publisher("/carla/ego_vehicle/vehicle_control_cmd", CarlaEgoVehicleControl, queue_size=10)
         rate.sleep()
+
