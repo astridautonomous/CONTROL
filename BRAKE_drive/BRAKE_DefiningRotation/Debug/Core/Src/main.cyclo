@@ -1,0 +1,10 @@
+../Core/Src/main.c:92:6:motor_fonksiyonu	3
+../Core/Src/main.c:144:5:main	13
+../Core/Src/main.c:268:6:SystemClock_Config	3
+../Core/Src/main.c:314:13:MX_TIM1_Init	8
+../Core/Src/main.c:393:13:MX_TIM2_Init	4
+../Core/Src/main.c:438:13:MX_TIM3_Init	6
+../Core/Src/main.c:497:13:MX_TIM4_Init	4
+../Core/Src/main.c:542:13:MX_TIM5_Init	4
+../Core/Src/main.c:587:13:MX_GPIO_Init	1
+../Core/Src/main.c:668:6:Error_Handler	1
