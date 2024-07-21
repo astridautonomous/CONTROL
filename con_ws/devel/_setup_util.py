@@ -1,4 +1,4 @@
-#!/home/ege/anaconda3/envs/rosbridge-carla/bin/python3
+#!/home/ege/anaconda3/envs/rosbridgeenv/bin/python3
 # -*- coding: utf-8 -*-
 
 # Software License Agreement (BSD License)

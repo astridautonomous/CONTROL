@@ -6,14 +6,14 @@ class TrajectoryProcess:
         self.refpose = refpose
         self.ref_headings = []
         self.min_distance_index = 0
-        self.k_st = 1.7
+        self.k_st = 1.2
         self.k_p = 1
         self.k_i = 1
         self.k_d = 0.05
         self.k_p_b = 1
         self.k_i_b = 1
         self.k_d_b = 0.05
-        self.interpolate_refpose()
+        # self.interpolate_refpose()
         self.calculate_headings()
 
     def interpolate_refpose(self, num_points=100): # Interpolate the reference path [Num_points: Number of points to interpolate] will asign 100 as default
@@ -39,9 +39,12 @@ class TrajectoryProcess:
 
     def calculate_min_distance(self, currentpose):
         distances = np.linalg.norm(self.refpose - currentpose, axis=1)
+        print("distances", distances)
         self.min_distance_index = np.argmin(distances)
+        self.min_distance_index = self.min_distance_index + 1
         # print("min_distance", np.amin(distances))
         return np.amin(distances)
+    
 
     def calculate_headings(self):
         for i in range(len(self.refpose) - 1):
@@ -71,8 +74,7 @@ class TrajectoryProcess:
         ref_heading = self.ref_headings[self.min_distance_index]
         ref_heading = self.normalize_angle(ref_heading)
 
-        print("ref_pose", self.refpose)
-        
+        # print("ref_pose", self.refpose)
         yaw_cross_track = np.arctan2(currentpose[1] - self.refpose[self.min_distance_index+1][1], 
                                 currentpose[0] - self.refpose[self.min_distance_index+1][0])
         yaw_path2ct = ref_heading - yaw_cross_track
