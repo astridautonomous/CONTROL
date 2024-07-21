@@ -1,8 +1,8 @@
-# Install script for directory: /home/yorgundemokrat/Desktop/CONTROL/con_ws/src/st_pid
+# Install script for directory: /home/ege/astrid/CONTROL/con_ws/src/st_pid
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/yorgundemokrat/Desktop/CONTROL/con_ws/install")
+  set(CMAKE_INSTALL_PREFIX "/home/ege/astrid/CONTROL/con_ws/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,163 +38,56 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  
-      if (NOT EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}")
-        file(MAKE_DIRECTORY "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}")
-      endif()
-      if (NOT EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/.catkin")
-        file(WRITE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/.catkin" "")
-      endif()
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/home/yorgundemokrat/Desktop/CONTROL/con_ws/install/_setup_util.py")
-  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
-    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
-  endif()
-  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
-    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
-  endif()
-file(INSTALL DESTINATION "/home/yorgundemokrat/Desktop/CONTROL/con_ws/install" TYPE PROGRAM FILES "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/_setup_util.py")
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/home/yorgundemokrat/Desktop/CONTROL/con_ws/install/env.sh")
-  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
-    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
-  endif()
-  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
-    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
-  endif()
-file(INSTALL DESTINATION "/home/yorgundemokrat/Desktop/CONTROL/con_ws/install" TYPE PROGRAM FILES "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/env.sh")
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/home/yorgundemokrat/Desktop/CONTROL/con_ws/install/setup.bash;/home/yorgundemokrat/Desktop/CONTROL/con_ws/install/local_setup.bash")
-  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
-    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
-  endif()
-  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
-    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
-  endif()
-file(INSTALL DESTINATION "/home/yorgundemokrat/Desktop/CONTROL/con_ws/install" TYPE FILE FILES
-    "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/setup.bash"
-    "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/local_setup.bash"
-    )
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/home/yorgundemokrat/Desktop/CONTROL/con_ws/install/setup.sh;/home/yorgundemokrat/Desktop/CONTROL/con_ws/install/local_setup.sh")
-  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
-    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
-  endif()
-  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
-    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
-  endif()
-file(INSTALL DESTINATION "/home/yorgundemokrat/Desktop/CONTROL/con_ws/install" TYPE FILE FILES
-    "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/setup.sh"
-    "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/local_setup.sh"
-    )
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/home/yorgundemokrat/Desktop/CONTROL/con_ws/install/setup.zsh;/home/yorgundemokrat/Desktop/CONTROL/con_ws/install/local_setup.zsh")
-  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
-    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
-  endif()
-  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
-    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
-  endif()
-file(INSTALL DESTINATION "/home/yorgundemokrat/Desktop/CONTROL/con_ws/install" TYPE FILE FILES
-    "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/setup.zsh"
-    "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/local_setup.zsh"
-    )
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/home/yorgundemokrat/Desktop/CONTROL/con_ws/install/.rosinstall")
-  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
-    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
-  endif()
-  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
-    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
-  endif()
-file(INSTALL DESTINATION "/home/yorgundemokrat/Desktop/CONTROL/con_ws/install" TYPE FILE FILES "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/.rosinstall")
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/st_pid/msg" TYPE FILE FILES
-    "/home/yorgundemokrat/Desktop/CONTROL/con_ws/src/st_pid/msg/Pat.msg"
-    "/home/yorgundemokrat/Desktop/CONTROL/con_ws/src/st_pid/msg/Path.msg"
+    "/home/ege/astrid/CONTROL/con_ws/src/st_pid/msg/Pat.msg"
+    "/home/ege/astrid/CONTROL/con_ws/src/st_pid/msg/Path.msg"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/st_pid/cmake" TYPE FILE FILES "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/st_pid-msg-paths.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/st_pid/cmake" TYPE FILE FILES "/home/ege/astrid/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/st_pid-msg-paths.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/include/st_pid")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/ege/astrid/CONTROL/con_ws/devel/include/st_pid")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/roseus/ros" TYPE DIRECTORY FILES "/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/share/roseus/ros/st_pid")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/roseus/ros" TYPE DIRECTORY FILES "/home/ege/astrid/CONTROL/con_ws/devel/share/roseus/ros/st_pid")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/common-lisp/ros" TYPE DIRECTORY FILES "/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/share/common-lisp/ros/st_pid")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/common-lisp/ros" TYPE DIRECTORY FILES "/home/ege/astrid/CONTROL/con_ws/devel/share/common-lisp/ros/st_pid")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gennodejs/ros" TYPE DIRECTORY FILES "/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/share/gennodejs/ros/st_pid")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gennodejs/ros" TYPE DIRECTORY FILES "/home/ege/astrid/CONTROL/con_ws/devel/share/gennodejs/ros/st_pid")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  execute_process(COMMAND "/home/yorgundemokrat/anaconda3/envs/con/bin/python3" -m compileall "/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/lib/python3/dist-packages/st_pid")
+  execute_process(COMMAND "/home/ege/anaconda3/envs/rosbridge-carla/bin/python3" -m compileall "/home/ege/astrid/CONTROL/con_ws/devel/lib/python3/dist-packages/st_pid")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages" TYPE DIRECTORY FILES "/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/lib/python3/dist-packages/st_pid")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages" TYPE DIRECTORY FILES "/home/ege/astrid/CONTROL/con_ws/devel/lib/python3/dist-packages/st_pid")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/st_pid.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ege/astrid/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/st_pid.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/st_pid/cmake" TYPE FILE FILES "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/st_pid-msg-extras.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/st_pid/cmake" TYPE FILE FILES "/home/ege/astrid/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/st_pid-msg-extras.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/st_pid/cmake" TYPE FILE FILES
-    "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/st_pidConfig.cmake"
-    "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/st_pidConfig-version.cmake"
+    "/home/ege/astrid/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/st_pidConfig.cmake"
+    "/home/ege/astrid/CONTROL/con_ws/build/st_pid/catkin_generated/installspace/st_pidConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/st_pid" TYPE FILE FILES "/home/yorgundemokrat/Desktop/CONTROL/con_ws/src/st_pid/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/st_pid" TYPE FILE FILES "/home/ege/astrid/CONTROL/con_ws/src/st_pid/package.xml")
 endif()
 
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for each subdirectory.
-  include("/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/gtest/cmake_install.cmake")
-
-endif()
-
-if(CMAKE_INSTALL_COMPONENT)
-  set(CMAKE_INSTALL_MANIFEST "install_manifest_${CMAKE_INSTALL_COMPONENT}.txt")
-else()
-  set(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
-endif()
-
-string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
-       "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/yorgundemokrat/Desktop/CONTROL/con_ws/build/st_pid/${CMAKE_INSTALL_MANIFEST}"
-     "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -67,14 +67,14 @@ set(st_pid_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(st_pid_SOURCE_PREFIX /home/yorgundemokrat/Desktop/CONTROL/con_ws/src/st_pid)
-  set(st_pid_DEVEL_PREFIX /home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid)
+  set(st_pid_SOURCE_PREFIX /home/ege/astrid/CONTROL/con_ws/src/st_pid)
+  set(st_pid_DEVEL_PREFIX /home/ege/astrid/CONTROL/con_ws/devel)
   set(st_pid_INSTALL_PREFIX "")
   set(st_pid_PREFIX ${st_pid_DEVEL_PREFIX})
 else()
   set(st_pid_SOURCE_PREFIX "")
   set(st_pid_DEVEL_PREFIX "")
-  set(st_pid_INSTALL_PREFIX /home/yorgundemokrat/Desktop/CONTROL/con_ws/install)
+  set(st_pid_INSTALL_PREFIX /home/ege/astrid/CONTROL/con_ws/install)
   set(st_pid_PREFIX ${st_pid_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/yorgundemokrat/Desktop/CONTROL/con_ws/install/lib;/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/lib;/home/yorgundemokrat/carla-ros-bridge/catkin_ws/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/ege/astrid/CONTROL/con_ws/install/lib;/home/ege/carla-ros-bridge/catkin_ws/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

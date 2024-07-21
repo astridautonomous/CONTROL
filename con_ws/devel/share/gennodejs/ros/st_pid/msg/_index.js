@@ -1,1 +1,10 @@
-/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/share/gennodejs/ros/st_pid/msg/_index.js
+
+"use strict";
+
+let Path = require('./Path.js');
+let Pat = require('./Pat.js');
+
+module.exports = {
+  Path: Path,
+  Pat: Pat,
+};

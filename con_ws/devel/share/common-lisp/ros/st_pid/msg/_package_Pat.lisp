@@ -1,1 +1,4 @@
-/home/yorgundemokrat/Desktop/CONTROL/con_ws/devel/.private/st_pid/share/common-lisp/ros/st_pid/msg/_package_Pat.lisp
+(cl:in-package st_pid-msg)
+(cl:export '(PATH_-VAL
+          PATH_
+))
