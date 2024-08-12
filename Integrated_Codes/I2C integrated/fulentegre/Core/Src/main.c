@@ -68,12 +68,12 @@ static void MX_I2C1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 //I2C
-//uint8_t RX_Buffer [32] ;
-//uint8_t tour=0;
-//uint32_t Encoder=0;
-//uint32_t Brake=0;
-//uint32_t Drive=0;
-//uint8_t TX_Buffer[1]={};
+uint8_t RX_Buffer [32] ;
+uint8_t tour=0;
+uint32_t Encoder=0;
+uint32_t Brake=0;
+uint32_t Drive=0;
+uint8_t TX_Buffer[1]={};
 // ENCODER
 volatile int32_t encoder=0;
 // direksiyon için kumanda sinyali değişkenleri extı_2
@@ -147,8 +147,7 @@ uint32_t b=0;
 
  if(dutycycle0>6298)
 	  		{
-	  			__HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1, dutycyclenew2);
-	  			//__HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1, Drive);
+	  			__HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1, Drive);
 	  			counter--;
 	  		}
 	  	else
@@ -160,11 +159,9 @@ uint32_t b=0;
  }
  void motorfonksiyon_pid()
  {
-	 	ref_aci=-((pulsewidth3-84000)/69.3)+1333;
 		aci1=encoder*0.12;
 		motoraci=aci1+720;
-		error=ref_aci-motoraci;
-		//error=Encoder-motoraci;
+		error=Encoder-motoraci;
 		if(error>sınırpos)
 		{
 			__HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_3,0);
@@ -245,13 +242,6 @@ int main(void)
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5,ENABLE);// DİREKSİYON LEFT ENABLE
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_1,DISABLE);//VACUUM
 
-//	KALDIRILABİLİR ALTTAKİ KISIM
-//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9,ENABLE);
-// HAL_Delay(3000);
-//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9,DISABLE);
-
-
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -264,31 +254,28 @@ int main(void)
 	  /* USER CODE END WHILE */
 
 	      /* USER CODE BEGIN 3 */
+	  HAL_I2C_Slave_Receive_IT(&hi2c1, (uint8_t *)RX_Buffer, 32);
+	  HAL_I2C_Slave_Transmit_IT(&hi2c1, TX_Buffer, 1);
+	  if (HAL_I2C_Slave_Receive_IT(&hi2c1, (uint8_t *)RX_Buffer, 32) == HAL_OK)
+		{
+			tour++;
+		}
+	  Encoder = RX_Buffer[1]+RX_Buffer[2]+RX_Buffer[3]+RX_Buffer[4]+RX_Buffer[5];
+	  Brake = RX_Buffer[6];
+	  Drive = RX_Buffer[7];
 
-//	  I2C
-//	  HAL_I2C_Slave_Receive_IT(&hi2c1, (uint8_t *)RX_Buffer, 32);
-//	  HAL_I2C_Slave_Transmit_IT(&hi2c1, TX_Buffer, 1);
-//	  if (HAL_I2C_Slave_Receive_IT(&hi2c1, (uint8_t *)RX_Buffer, 32) == HAL_OK)
-//		{
-//			tour++;
-//		}
-//	  Encoder = RX_Buffer[1]+RX_Buffer[2]+RX_Buffer[3]+RX_Buffer[4]+RX_Buffer[5];
-//	  Brake = RX_Buffer[6];
-//	  Drive = RX_Buffer[7];
-//
 	  counnt++;
 	  	  if(counnt>2000000)
 	  	  {
 	  	  	rpm=0;
-//	  	  	TX_Buffer[0] = rpm;
+	  	  	TX_Buffer[1] = rpm;
 	  	  }
 
 	  		motor_fonksiyonu();
 	  		motorfonksiyon_pid();
 	  		AA=__HAL_TIM_GET_COMPARE(&htim3,TIM_CHANNEL_1);
 
-	  	//if(Brake == 1)
-		if(signal == 1){
+	  	if(Brake == 1){
 			if(falling_detected2==1){
 			  		while(1){
 
@@ -298,8 +285,8 @@ int main(void)
 			  			motorfonksiyon_pid();
 			  			AA=__HAL_TIM_GET_COMPARE(&htim3,TIM_CHANNEL_1);
 
-			  			//if(Brake != 1||falling_detected2==0)
-			  			if(signal != 1||falling_detected2==0){
+			  			if(Brake != 1||falling_detected2==0)
+			  			{
 			  				break;
 			  				AA=__HAL_TIM_GET_COMPARE(&htim3,TIM_CHANNEL_1);
 			  			}
@@ -312,8 +299,7 @@ int main(void)
 	  	AA=__HAL_TIM_GET_COMPARE(&htim3,TIM_CHANNEL_1);
 
 	  }
-//	  if(Brake == 0)
-	  if(signal == 0){
+	  if(Brake == 0){
 			if(falling_detected==1){
 			  		while(1){
 			  			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
@@ -322,14 +308,13 @@ int main(void)
 			  			motorfonksiyon_pid();
 			  			AA=__HAL_TIM_GET_COMPARE(&htim3,TIM_CHANNEL_1);
 
-			  			//if(Brake != 0||falling_detected==0)
-			  			if(signal != 0||falling_detected==0){
+			  			if(Brake != 0||falling_detected==0){
 			  				pompa=0;
 			  				break;
 			  			}
 			  		}
 			  	}
-	  	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 60); //holding the  motor
+	  	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 60); 
 	  	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
 	  	motor_fonksiyonu();
 	  	motorfonksiyon_pid();
