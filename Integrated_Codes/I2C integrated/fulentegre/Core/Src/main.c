@@ -254,6 +254,8 @@ int main(void)
 	  /* USER CODE END WHILE */
 
 	      /* USER CODE BEGIN 3 */
+	  velo=rpm/44,12433594554455;
+	  
 	  HAL_I2C_Slave_Receive_IT(&hi2c1, (uint8_t *)RX_Buffer, 32);
 	  HAL_I2C_Slave_Transmit_IT(&hi2c1, TX_Buffer, 1);
 	  if (HAL_I2C_Slave_Receive_IT(&hi2c1, (uint8_t *)RX_Buffer, 32) == HAL_OK)
@@ -263,12 +265,12 @@ int main(void)
 	  Encoder = RX_Buffer[1]+RX_Buffer[2]+RX_Buffer[3]+RX_Buffer[4]+RX_Buffer[5];
 	  Brake = RX_Buffer[6];
 	  Drive = RX_Buffer[7];
-
+	  
 	  counnt++;
 	  	  if(counnt>2000000)
 	  	  {
 	  	  	rpm=0;
-	  	  	TX_Buffer[1] = rpm;
+	  	  	TX_Buffer[1] = velo;
 	  	  }
 
 	  		motor_fonksiyonu();
