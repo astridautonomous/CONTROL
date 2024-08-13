@@ -224,6 +224,7 @@ int main(void)
   HAL_TIM_Base_Start(&htim2);
   HAL_TIM_Base_Start(&htim5);
   HAL_TIM_Base_Start(&htim4);
+  HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_1); //HALL SENSOR
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);// FREN MOTORU PWM
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);// FREN MOTORU PWM
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);// TULPAR PWM
@@ -249,6 +250,13 @@ int main(void)
 
 	      /* USER CODE BEGIN 3 */
 
+counnt++;
+
+	  	  if(counnt>10000)
+	  	  {
+	  	  	rpm=0;
+	  	  }
+	  
 	  		motor_fonksiyonu();
 	  		motorfonksiyon_pid();
 	  		AA=__HAL_TIM_GET_COMPARE(&htim3,TIM_CHANNEL_1);
