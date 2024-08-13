@@ -481,7 +481,7 @@ void TIM4_IRQHandler(void)
 	capture_value=__HAL_TIM_GET_COMPARE(&htim4,TIM_CHANNEL_1);
 
 	__HAL_TIM_SET_COUNTER(&htim4,0);
-	  frequency=1000000/capture_value;
+	  frequency=2000/capture_value;
 	  rpm=(frequency*60)/24;
 	  counnt=0;
 
