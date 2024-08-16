@@ -81,6 +81,7 @@ extern volatile float motoraci;
 extern volatile float aci1;
 extern uint32_t counnt,capture_value;
 extern float frequency,rpm;
+float velo=0;
 
 /* USER CODE END PV */
 
@@ -484,6 +485,7 @@ void TIM4_IRQHandler(void)
 	  frequency=2000/capture_value;
 	  rpm=(frequency*60)/24;
 	  counnt=0;
+	velo=rpm/44.12433594554455;
 
   /* USER CODE END TIM4_IRQn 0 */
   HAL_TIM_IRQHandler(&htim4);
