@@ -1,2 +1,0 @@
-st_pid
--DCATKIN_DEVEL_PREFIX=/home/ege/astrid/CONTROL/con_ws/devel -DCMAKE_INSTALL_PREFIX=/home/ege/astrid/CONTROL/con_ws/install -G Unix Makefiles
