@@ -78,7 +78,6 @@ class BrakeCommandNode(Node):
         
         self.send_i2c(delayed_power_value, self.brake_value, self.steer_cmd_left, self.steer_cmd_right)
 
-        # Zamanlayıcı işini bitirdi, kendini imha etsin ve değişkeni sıfırla
         self.delayed_power_timer.cancel()
         self.delayed_power_timer = None
 
