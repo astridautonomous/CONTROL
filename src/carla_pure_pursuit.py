@@ -1,40 +1,27 @@
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry, Path
-from carla_msgs.msg import CarlaEgoVehicleControl
 import math
+from carla_msgs.msg import CarlaEgoVehicleControl
+from std_msgs.msg import Float32
 
 class PurePursuitController(Node):
     def __init__(self):
         super().__init__('pure_pursuit_controller')
 
         # Params
-        self.L = 2.7                              # Carla ego vehicle wheelbase (m)
-        self.lookahead_distance = 5.0             #### Calibrative Variable
+        self.L = 4.0                              # Carla ego vehicle wheelbase (m)
+        self.lookahead_distance = 2.0             #### Calibrative Variable
         self.final_waypoint_brake_threshold = 2.0 #### Calibrative Variable
-        self.max_steer_angle = math.radians(70)   # Carla max steer (rad)
         self.target_throttle = 0.3                # Throttle (0.0 - 1.0)
 
         # Subscribers
-        self.odom_sub = self.create_subscription(
-            Odometry,
-            '/carla/ego_vehicle/odometry',
-            self.odom_callback,
-            10
-        )
-        self.path_sub = self.create_subscription(
-            Path,
-            '/astrid/navigation/global_path',  # ← kendi topic ismine göre değiştir
-            self.path_callback,
-            10
-        )
+        self.odom_sub = self.create_subscription(Odometry, '/carla/hero/odometry', self.odom_callback, 10)
+        self.path_sub = self.create_subscription(Path, '/astrid/navigation/global_path', self.path_callback, 10)
 
-        # Publisher
-        self.control_pub = self.create_publisher(
-            CarlaEgoVehicleControl,
-            '/carla/ego_vehicle/vehicle_control_cmd',
-            10
-        )
+        # Publishers
+        self.steer_pub = self.create_publisher(Float32, '/astrid/control/steer_cmd', 10)
+        self.control_pub = self.create_publisher(CarlaEgoVehicleControl,'/carla/hero/vehicle_control_cmd', 10)
 
         # Internal state
         self.current_pose = None
@@ -58,7 +45,6 @@ class PurePursuitController(Node):
         x = self.current_orientation.x
         y = self.current_orientation.y
         z = self.current_orientation.z
-        # Standart quaternion → yaw dönüşümü, offset yok
         t3 = 2.0 * (w * z + x * y)
         t4 = 1.0 - 2.0 * (y * y + z * z)
         return math.atan2(t3, t4)
@@ -87,16 +73,17 @@ class PurePursuitController(Node):
 
         if target_idx == closest_idx:
             target_idx = len(self.waypoints) - 1
-            self.get_logger().info("Lookahead distance aşılamadı, son waypoint hedef olarak seçildi.")
+            self.get_logger().info(
+                "Lookahead distance aşılamadı, son waypoint hedef olarak seçildi.")
 
         xt = self.waypoints[target_idx].x
         yt = self.waypoints[target_idx].y
         distance_to_target = math.hypot(xt - x, yt - y)
 
-        # Yaw hesapla (Carla standart ENU, offset yok)
+        # Yaw
         yaw = self.get_yaw_from_quaternion()
 
-        # Alpha: hedef açısı - aracın yönü (✅ atan2(dy, dx) standart sıralama)
+        # Alpha
         dx = xt - x
         dy = yt - y
         alpha = math.atan2(dy, dx) - yaw
@@ -105,13 +92,17 @@ class PurePursuitController(Node):
         # Pure Pursuit direksiyon açısı
         delta = math.atan2(2.0 * self.L * math.sin(alpha), self.lookahead_distance)
 
-        # Carla steer: [-1, 1] aralığına normalize et (işaret manipülasyonu yok)
-        steer_cmd = delta / self.max_steer_angle
-        steer_cmd = max(-1.0, min(1.0, steer_cmd))
+        # ← İLK KODDAN ALINAN ÇALIŞAN STEERİNG MANTIĞI
+        steer_cmd = max(min(delta, 1.0), -1.0)
+        if alpha > 0:
+            steer_cmd = -steer_cmd
+        else:
+            steer_cmd = abs(steer_cmd)
 
         self.get_logger().info(
             f"\n- Pozisyon: ({x:.2f}, {y:.2f})"
-            f"\n- En Yakın Waypoint [{closest_idx}]: ({self.waypoints[closest_idx].x:.2f}, {self.waypoints[closest_idx].y:.2f})"
+            f"\n- En Yakın Waypoint [{closest_idx}]: "
+            f"({self.waypoints[closest_idx].x:.2f}, {self.waypoints[closest_idx].y:.2f})"
             f"\n- Target [{target_idx}]: ({xt:.2f}, {yt:.2f})"
             f"\n- Target Mesafesi: {distance_to_target:.2f} m"
             f"\n- Kalan Waypoint: {len(self.waypoints) - target_idx}"
@@ -123,9 +114,13 @@ class PurePursuitController(Node):
             f"Steer: {steer_cmd:.3f}"
         )
 
-        control_msg = CarlaEgoVehicleControl()
+        # Float32 steer yayınla
+        steer_msg = Float32()
+        steer_msg.data = steer_cmd
+        self.steer_pub.publish(steer_msg)
 
-        # Hedefe varıldıysa dur
+        # CarlaEgoVehicleControl yayınla
+        control_msg = CarlaEgoVehicleControl()
         final_waypoint = self.waypoints[-1]
         dist_to_final = math.hypot(final_waypoint.x - x, final_waypoint.y - y)
 
@@ -134,7 +129,8 @@ class PurePursuitController(Node):
             control_msg.throttle = 0.0
             control_msg.brake = 1.0
             control_msg.steer = 0.0
-            self.get_logger().info(f"GOAL REACHED (Mesafe: {dist_to_final:.2f}m). ARAÇ DURDURULUYOR.")
+            self.get_logger().info(
+                f"GOAL REACHED (Mesafe: {dist_to_final:.2f}m). ARAÇ DURDURULUYOR.")
         else:
             control_msg.throttle = self.target_throttle
             control_msg.brake = 0.0
@@ -143,7 +139,6 @@ class PurePursuitController(Node):
         control_msg.hand_brake = False
         control_msg.reverse = False
         control_msg.manual_gear_shift = False
-
         self.control_pub.publish(control_msg)
 
 
