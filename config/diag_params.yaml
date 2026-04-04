@@ -1,0 +1,101 @@
+
+# ── Ortak watchdog parametreleri ───────────────────────────
+# Tüm node'lar bu değerleri kullanır.
+# timeout    : Bu süre (sn) boyunca yayın gelmezse terminal'e ERROR basar
+# check_rate : Kontrol sıklığı (Hz)
+ 
+# ── PERCEPTION ────────────────────────────────────
+diag_image_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+
+diag_string_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+ 
+# ── SLAM ──────────────────────────────────────────
+diag_odom_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+ 
+diag_posestamped_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+
+diag_pointc2_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+
+diag_markerarray_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+
+diag_laserscan_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+
+diag_float32ma_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+
+diag_grid_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+
+diag_float32ma_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+
+diag_int32s_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+
+diag_int8s_node:       
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+ 
+# ── NAVIGATION ────────────────────────────────────
+diag_path_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+ 
+diag_posearray_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+ 
+# ── CONTROL ───────────────────────────────────────
+diag_int32_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+ 
+diag_int32ma_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+
+diag_int32_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+
+diag_int8_node:
+  ros__parameters:
+    timeout:    5.0
+    check_rate: 1.0
+
+ 

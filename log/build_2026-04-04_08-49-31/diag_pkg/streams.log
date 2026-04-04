@@ -1,0 +1,78 @@
+[0.342s] Invoking command in '/home/irmak/diag_ws/src/diag_pkg': CONDA_PROMPT_MODIFIER=(env39) PYTHONPATH=/home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base build/diag_pkg build --build-base /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build install --record /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/install.log --single-version-externally-managed install_data
+[0.438s] running egg_info
+[0.438s] writing build/diag_pkg/diag_pkg.egg-info/PKG-INFO
+[0.439s] writing dependency_links to build/diag_pkg/diag_pkg.egg-info/dependency_links.txt
+[0.439s] writing entry points to build/diag_pkg/diag_pkg.egg-info/entry_points.txt
+[0.439s] writing requirements to build/diag_pkg/diag_pkg.egg-info/requires.txt
+[0.440s] writing top-level names to build/diag_pkg/diag_pkg.egg-info/top_level.txt
+[0.441s] reading manifest file 'build/diag_pkg/diag_pkg.egg-info/SOURCES.txt'
+[0.441s] writing manifest file 'build/diag_pkg/diag_pkg.egg-info/SOURCES.txt'
+[0.441s] running build
+[0.441s] running build_py
+[0.441s] copying diag_pkg/diag_pointc2_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.442s] copying diag_pkg/diag_markerarray_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.442s] copying diag_pkg/diag_image_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.442s] copying diag_pkg/diag_path_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.443s] copying diag_pkg/diag_posestamped_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.443s] copying diag_pkg/diag_int32ma_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.443s] copying diag_pkg/diag_float32ma_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.443s] copying diag_pkg/diag_laserscan_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.444s] copying diag_pkg/diag_odom_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.444s] copying diag_pkg/diag_posearray_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.444s] copying diag_pkg/diag_string_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.445s] copying diag_pkg/diag_int8_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.445s] copying diag_pkg/diag_int32_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.445s] copying diag_pkg/diag_grid_node.py -> /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg
+[0.446s] running install
+[0.446s] running install_lib
+[0.447s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_pointc2_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.447s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_markerarray_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.447s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_image_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.447s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_path_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.447s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_posestamped_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.447s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_int32ma_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.447s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_float32ma_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.447s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_laserscan_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.447s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_odom_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.448s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_posearray_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.448s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_string_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.448s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_int8_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.448s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_int32_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.448s] copying /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build/lib/diag_pkg/diag_grid_node.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg
+[0.448s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_pointc2_node.py to diag_pointc2_node.cpython-310.pyc
+[0.448s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_markerarray_node.py to diag_markerarray_node.cpython-310.pyc
+[0.449s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_image_node.py to diag_image_node.cpython-310.pyc
+[0.449s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_path_node.py to diag_path_node.cpython-310.pyc
+[0.450s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_posestamped_node.py to diag_posestamped_node.cpython-310.pyc
+[0.450s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_int32ma_node.py to diag_int32ma_node.cpython-310.pyc
+[0.451s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_float32ma_node.py to diag_float32ma_node.cpython-310.pyc
+[0.452s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_laserscan_node.py to diag_laserscan_node.cpython-310.pyc
+[0.452s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_odom_node.py to diag_odom_node.cpython-310.pyc
+[0.453s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_posearray_node.py to diag_posearray_node.cpython-310.pyc
+[0.453s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_string_node.py to diag_string_node.cpython-310.pyc
+[0.454s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_int8_node.py to diag_int8_node.cpython-310.pyc
+[0.454s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_int32_node.py to diag_int32_node.cpython-310.pyc
+[0.455s] byte-compiling /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg/diag_grid_node.py to diag_grid_node.cpython-310.pyc
+[0.456s] running install_data
+[0.456s] copying launch/diag_.launch.py -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/share/diag_pkg/launch
+[0.456s] copying config/diag_params.yaml -> /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/share/diag_pkg/config
+[0.456s] running install_egg_info
+[0.457s] removing '/home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg-0.0.0-py3.10.egg-info' (and everything under it)
+[0.457s] Copying build/diag_pkg/diag_pkg.egg-info to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages/diag_pkg-0.0.0-py3.10.egg-info
+[0.458s] running install_scripts
+[0.467s] Installing diag_float32ma_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.467s] Installing diag_grid_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.467s] Installing diag_image_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.467s] Installing diag_int32_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.467s] Installing diag_int32ma_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.467s] Installing diag_int8_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.468s] Installing diag_laserscan_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.468s] Installing diag_markerarray_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.468s] Installing diag_odom_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.468s] Installing diag_path_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.468s] Installing diag_pointc2_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.468s] Installing diag_posearray_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.468s] Installing diag_posestamped_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.468s] Installing diag_string_node script to /home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/diag_pkg
+[0.469s] writing list of installed files to '/home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/install.log'
+[0.480s] Invoked command in '/home/irmak/diag_ws/src/diag_pkg' returned '0': CONDA_PROMPT_MODIFIER=(env39) PYTHONPATH=/home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/irmak/diag_ws/src/diag_pkg/install/diag_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base build/diag_pkg build --build-base /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/build install --record /home/irmak/diag_ws/src/diag_pkg/build/diag_pkg/install.log --single-version-externally-managed install_data
