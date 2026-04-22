@@ -1,0 +1,13 @@
+# ============================================================
+#  Bu dosyayı değiştirip tekrar launch et (build gerekmez):
+#    ros2 launch diag_pkg diag_all.launch.py
+#
+#  Ya da terminalden override et:
+#    ros2 launch diag_pkg diag_all.launch.py slam:=false
+# ============================================================
+ 
+layer_flags:
+  enable_perception:  false
+  enable_slam:        false
+  enable_navigation:  false
+  enable_control:     false
