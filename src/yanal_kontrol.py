@@ -15,7 +15,7 @@ class PurePursuitController(Node):
         # self.target_throttle = 0.3                 # BrakeManager üstlendi
 
         # Subscribers
-        self.odom_sub = self.create_subscription(Odometry, '/carla/hero/odometry', self.odom_callback, 10)
+        self.odom_sub = self.create_subscription(Odometry, '/astrid/slam/odometry', self.odom_callback, 10)
         self.path_sub = self.create_subscription(Path, '/astrid/navigation/fusion_path', self.path_callback, 10)
 
         # Publishers
