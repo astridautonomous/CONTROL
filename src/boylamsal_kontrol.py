@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
-from carla_msgs.msg import CarlaEgoVehicleControl
+#from carla_msgs.msg import CarlaEgoVehicleControl
 from std_msgs.msg import Int8, String, Float32
 from geometry_msgs.msg import PoseArray
 from shapely.geometry import Point as ShapelyPoint, Polygon
@@ -79,12 +79,12 @@ class BrakeManager:
         )
 
         # ── Publishers ───────────────────────────────────────────────────────
-        self.control_pub  = self.node.create_publisher(
-            CarlaEgoVehicleControl, '/carla/hero/vehicle_control_cmd', 10)
+        #self.control_pub  = self.node.create_publisher(
+        #    CarlaEgoVehicleControl, '/carla/hero/vehicle_control_cmd', 10)
         self.throttle_pub = self.node.create_publisher(
-            Int8, '/astrid/control/throttle_cmd', 10)
+            Int16, '/astrid/control/throttle_cmd', 10)
         self.brake_pub    = self.node.create_publisher(
-            Int8, '/astrid/control/brake_cmd', 10)
+            Int16, '/astrid/control/brake_cmd', 10)
 
         # ── Subscribers ──────────────────────────────────────────────────────
         self.node.create_subscription(
@@ -96,10 +96,9 @@ class BrakeManager:
         self.node.create_subscription(
             Float32, '/astrid/control/steer_cmd',
             self.steering_cmd_callback, 10)
-
         # ── Map Loading ──────────────────────────────────────────────────────
         self._load_gorev_points("/home/talha/Kodlar/ornek_1.geojson")
-        filename  = "/home/talha/Kodlar/carla_test.osm"
+        filename  = "/home/talha/Downloads/besiktas_test19.05.2026_init.osm"
         filename  = self.map_file
         origin    = lanelet2.io.Origin(0.0, 0.0)
         projector = lanelet2.projection.LocalCartesianProjector(origin)
@@ -302,22 +301,20 @@ class BrakeManager:
     # LOW-LEVEL SEND HELPERS
     # ════════════════════════════════════════════════════════════════════════
     def _send_control(self, throttle: float, brake: float) -> None:
-        ctrl          = CarlaEgoVehicleControl()
-        ctrl.throttle = float(throttle)
-        ctrl.brake    = float(brake)
-        ctrl.steer    = self.current_steer_cmd
-        self.control_pub.publish(ctrl)
+        #ctrl          = CarlaEgoVehicleControl()
+        #ctrl.throttle = float(throttle)
+        #ctrl.brake    = float(brake)
+        #ctrl.steer    = self.current_steer_cmd
+        #self.control_pub.publish(ctrl)
         t_msg      = Int8()
         b_msg      = Int8()
         t_msg.data = self.throttle_int if throttle > 0.0 else 0
-        b_msg.data = 1            if brake    > 0.0 else 0
+        b_msg.data = 1 if brake > 0.0 else 0
         self.throttle_pub.publish(t_msg)
         self.brake_pub.publish(b_msg)
-
-    def _apply_brake(self)    -> None: self._send_control(throttle=0.0,           brake=1.0)
+    def _apply_brake(self)    -> None: self._send_control(throttle=0.0,                brake=1.0)
     def _apply_throttle(self) -> None: self._send_control(throttle=self.throttle_value, brake=0.0)
-    def _apply_coast(self)    -> None: self._send_control(throttle=0.0,           brake=0.0)
-
+    def _apply_coast(self)    -> None: self._send_control(throttle=0.0,                brake=0.0)
     # ════════════════════════════════════════════════════════════════════════
     # HELPERS
     # ════════════════════════════════════════════════════════════════════════
@@ -532,8 +529,8 @@ class BrakeNode(Node):
         self.declare_parameter('gorev_dist_threshold',  0.75)
         self.declare_parameter('gorev_brake_duration',  3.0)
         self.declare_parameter('gorev_wait_duration',   5.0)
-        self.declare_parameter('map_file',              '')
-        self.declare_parameter('geojson_file',          '')
+        self.declare_parameter('map_file',              '/home/talha/Downloads/besiktas_test19.05.2026_init.osm')
+        self.declare_parameter('geojson_file',          '/home/talha/Kodlar/ornek_1.geojson')
 
         self.brake_manager = BrakeManager(
             self,
@@ -553,7 +550,7 @@ class BrakeNode(Node):
             geojson_file            = self.get_parameter('geojson_file').value,
         )
         self.create_subscription(
-            Odometry, '/carla/hero/odometry', self.odom_callback, 10
+            Odometry, '/astrid/slam/odometry', self.odom_callback, 10
         )
 
     def odom_callback(self, msg: Odometry) -> None:
