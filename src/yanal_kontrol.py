@@ -3,7 +3,7 @@ from rclpy.node import Node
 from nav_msgs.msg import Odometry, Path
 import math
 # from carla_msgs.msg import CarlaEgoVehicleControl  # BrakeManager üstlendi
-from std_msgs.msg import Float32
+from std_msgs.msg import Int16
 from visualization_msgs.msg import Marker, MarkerArray  # YENİ EKLENTİ
 from geometry_msgs.msg import Point  # YENİ EKLENTİ
 
@@ -11,8 +11,8 @@ class PurePursuitController(Node):
     def __init__(self):
         super().__init__('pure_pursuit_controller')
         # Params
-        self.L = 1.6                              # Carla ego vehicle wheelbase (m)
-        self.lookahead_distance = 2.0          #### Calibrative Variable
+        self.L = 1.7                              # Carla ego vehicle wheelbase (m)
+        self.lookahead_distance = 2.85     #### Calibrative Variable
         # self.final_waypoint_brake_threshold = 2.0  # BrakeManager üstlendi
         # self.target_throttle = 0.3                 # BrakeManager üstlendi
 
@@ -22,21 +22,27 @@ class PurePursuitController(Node):
 
         # Publishers
         self.steer_pub = self.create_publisher(Int16, '/astrid/control/steer_cmd', 10)
+        # self.control_pub = self.create_publisher(CarlaEgoVehicleControl, '/carla/hero/vehicle_control_cmd', 10)  # BrakeManager üstlendi
+        
+        # YENİ: Hedef waypoint için marker publisher
         self.target_marker_pub = self.create_publisher(Marker, '/astrid/control/target_waypoint_marker', 10)
 
         # Internal state
         self.current_pose = None
         self.current_orientation = None
         self.waypoints = []
+        # self.goal_reached = False  # BrakeManager üstlendi
 
     def odom_callback(self, msg):
         self.current_pose = msg.pose.pose
         self.current_orientation = msg.pose.pose.orientation
-        if self.current_pose and self.waypoints:
+        if self.current_pose and self.waypoints:  # goal_reached kontrolü BrakeManager'da
             self.compute_and_publish_control()
 
     def path_callback(self, msg):
         self.waypoints = [pose.pose.position for pose in msg.poses]
+        # self.goal_reached = False  # BrakeManager üstlendi
+        #self.get_logger().info(f'{len(self.waypoints)} waypoint alındı.')
 
     def get_yaw_from_quaternion(self):
         w = self.current_orientation.w
@@ -46,7 +52,8 @@ class PurePursuitController(Node):
         t3 = 2.0 * (w * z + x * y)
         t4 = 1.0 - 2.0 * (y * y + z * z)
         return math.atan2(t3, t4)
-        
+
+    # YENİ: Hedef waypoint'i görselleştirmek için yardımcı fonksiyon
     def publish_target_marker(self, target_idx, x, y):
         marker = Marker()
         marker.header.frame_id = "map"  # veya "odom" - kullandığınız frame'e göre ayarlayın
@@ -125,10 +132,10 @@ class PurePursuitController(Node):
         delta = math.atan2(2.0 * self.L * math.sin(alpha), self.lookahead_distance)
 
         steer_cmd = math.degrees(delta)
-        if math.degrees(delta) < -15.0:
-            steer_cmd = -15.0
-        elif math.degrees(delta) > 15.0:
-            steer_cmd = 15.0
+        if math.degrees(delta) < -25.5:
+            steer_cmd = -25.5
+        elif math.degrees(delta) > 25.5:
+            steer_cmd = 25.5
 
         if alpha > 0:
             steer_cmd = -steer_cmd 
@@ -152,9 +159,30 @@ class PurePursuitController(Node):
         )
 
         # Sadece steer yayınla — throttle/brake kararı BrakeManager'a ait
-        steer_msg = Float32()
-        steer_msg.data = steer_cmd
+        steer_msg = Int16()
+        steer_msg.data =int(steer_cmd) * 10
         self.steer_pub.publish(steer_msg)
+
+        #── Aşağıdaki blok BrakeManager'a devredildi ──────────────────────
+        #control_msg = CarlaEgoVehicleControl()
+        #final_waypoint = self.waypoints[-1]
+        #dist_to_final = math.hypot(final_waypoint.x - x, final_waypoint.y - y)
+        #if dist_to_final < self.final_waypoint_brake_threshold:
+        #    self.goal_reached = True
+        #    control_msg.throttle = 0.0
+        #     control_msg.brake = 1.0
+        #    control_msg.steer = 0.0
+        #    self.get_logger().info(
+        #        f"GOAL REACHED (Mesafe: {dist_to_final:.2f}m). ARAÇ DURDURULUYOR.")
+        #else:
+        #    control_msg.throttle = self.target_throttle
+        #    control_msg.brake = 0.0
+        #    control_msg.steer = steer_cmd
+        #control_msg.hand_brake = False
+        #control_msg.reverse = False
+        #control_msg.manual_gear_shift = False
+        #self.control_pub.publish(control_msg)
+    
 
 def main(args=None):
     rclpy.init(args=args)
