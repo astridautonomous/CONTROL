@@ -12,18 +12,18 @@ import json
 import math
 from rclpy.qos import QoSProfile, QoSDurabilityPolicy, QoSReliabilityPolicy
 
-DEFAULT_MAP_FILE     = "/media/astrid/SMSSD/dp_haritalar/dp_map.osm"
-DEFAULT_GEOJSON_FILE = "/media/astrid/SMSSD/Davutpasa_Test/test_08_08/control/ornek.geojson"
+DEFAULT_MAP_FILE     = "/home/talha/Desktop/Robotaksi_final/3.gun_kodları/map/QF_map.osm"
+DEFAULT_GEOJSON_FILE = "/home/talha/Desktop/Robotaksi_final/hakem_kodları/geojson/ana_map.geojson"
 
 DEFAULT_PARAMS = {
-    'brake_duration':         3.0,
-    'red_light_timeout':      20.0,
+    'brake_duration':         5.0,
+    'traffic_light_red_timeout': 20.0,
     'park_dist_threshold':    1.0,
     'park_wait_duration':     5.0,
-    'station_dist_threshold': 2.0,
+    'station_dist_threshold': 1.5,
     'station_wait_duration':  5.0,
-    'gorev_dist_threshold':   0.8,
-    'gorev_wait_duration':    10.0,
+    'gorev_dist_threshold':   1.5,
+    'gorev_wait_duration':    5.0,
     'throttle_int':           40,
     'map_file':               DEFAULT_MAP_FILE,
     'geojson_file':           DEFAULT_GEOJSON_FILE,
@@ -33,7 +33,7 @@ DEFAULT_PARAMS = {
 class BrakeManager:
     def __init__(self, node: Node,
                  brake_duration: float = DEFAULT_PARAMS['brake_duration'],
-                 red_light_timeout: float = DEFAULT_PARAMS['red_light_timeout'],
+                 traffic_light_red_timeout: float = DEFAULT_PARAMS['traffic_light_red_timeout'],
                  park_dist_threshold: float = DEFAULT_PARAMS['park_dist_threshold'],
                  park_wait_duration: float = DEFAULT_PARAMS['park_wait_duration'],
                  station_dist_threshold: float = DEFAULT_PARAMS['station_dist_threshold'],
@@ -50,14 +50,20 @@ class BrakeManager:
         # ── Ayrı mesafe eşikleri ─────────────────────────────────────────────
         self.park_dist_threshold_sq    = park_dist_threshold    * park_dist_threshold
         self.station_dist_threshold_sq = station_dist_threshold * station_dist_threshold
-        self.brake_duration    = brake_duration
-        self.red_light_timeout = red_light_timeout
+        self.brake_duration = brake_duration
         self.park_wait_duration    = park_wait_duration
         self.station_wait_duration = station_wait_duration
+        # ── Trafik ışığı kırmızıda azami bekleme (timeout) süresi ────────────
+        # Kırmızı ışık algılandıktan sonra bu süre dolana kadar yeşil
+        # görülmezse, araç otomatik olarak gaza geçer (sensör/algılama
+        # sorunlarında sonsuza kadar kilitli kalmamak için).
+        self.traffic_light_red_timeout = traffic_light_red_timeout
         # ── Dinamik engel ────────────────────────────────────────────────────
         self.dynamic_mode             = 0
         self.is_stopped_for_dynamic   = False
         self.dynamic_brake_start_time = None
+        self.dynamic_one_count        = 0
+        self.dynamic_zero_count       = 0
         # ── Trafik ışığı ─────────────────────────────────────────────────────
         self.traffic_light_status            = 0
         self.is_stopped_at_traffic_light     = False
@@ -73,9 +79,6 @@ class BrakeManager:
         self.park_wait_start_time = None
         self.park_stop_time       = None
         self.park_finished        = False
-
-        self.dynmaic_counter = 0
-
         # ── Her durak için bağımsız state ────────────────────────────────────
         self.station_states = []
         # ── GeoJSON Görev Noktaları ──────────────────────────────────────────
@@ -156,7 +159,7 @@ class BrakeManager:
                 f"Park noktası ayarlandı: {self.park_point}")
             self.has_braked_at_park = False
         else:
-            self.node.get_logger().warn("park2 için nokta bulunamadı.")
+            self.node.get_logger().warn("park3 için nokta bulunamadı.")
         # ── GeoJSON'dan Görev Noktalarını Yükle (TEK ÇAĞRI) ─────────────────
         self._load_gorev_points(self.geojson_file)
     # ════════════════════════════════════════════════════════════════════════
@@ -164,8 +167,6 @@ class BrakeManager:
     # ════════════════════════════════════════════════════════════════════════
     def _load_gorev_points(self, geojson_path: str) -> None:
         """GeoJSON dosyasından 'gorev_' ile başlayan noktaları sıralı yükler."""
-        # Idempotent guard: fonksiyon yanlışlıkla ikinci kez çağrılırsa
-        # noktaların tekrar tekrar eklenmesini engeller.
         if self.gorev_points:
             self.node.get_logger().warn(
                 "Görev noktaları zaten yüklü — tekrar yükleme atlandı "
@@ -203,7 +204,6 @@ class BrakeManager:
                 "wait_start_time": None,
                 "done":            False,
             })
-        # ── Koordinat Özet Logu ──────────────────────────────────────────────
         self.node.get_logger().info(
             f"Toplam {len(self.gorev_points)} görev noktası yüklendi.")
         if self.gorev_points:
@@ -226,7 +226,7 @@ class BrakeManager:
     def traffic_light_callback(self, msg: String) -> None:
         msg_list = json.loads(msg.data)
         raw = msg_list[0][0]
-        if raw == 'yesil-isik':
+        if raw == 'yesil_isik':
             if self.traffic_light_status == 1:
                 self.traffic_light_recently_released = True
                 self.traffic_light_release_time = (
@@ -242,15 +242,13 @@ class BrakeManager:
             self.traffic_light_status           = 0
             self.traffic_light_brake_start_time = None
             self.node.get_logger().info("traffic_light_status = 0 (yeşil)")
-        elif raw == 'kirmizi-isik':
+        elif raw == 'kirmizi_isik':
             if self.traffic_light_status != 1:
                 self.traffic_light_brake_start_time = (
                     self.node.get_clock().now().nanoseconds * 1e-9
                 )
                 self.node.get_logger().warn(
-                    f"Kırmızı ışık — {self.brake_duration}s fren, "
-                    f"{self.red_light_timeout}s içinde yeşil gelmezse gaz verilecek."
-                )
+                    f"Kırmızı ışık — {self.brake_duration}s fren başlatıldı.")
             self.traffic_light_status            = 1
             self.traffic_light_recently_released = False
             self._apply_brake()
@@ -260,34 +258,48 @@ class BrakeManager:
     def steering_cmd_callback(self, msg: Float32) -> None:
         self.current_steer_cmd = msg.data
     def dynamic_mode_callback(self, msg: Int8) -> None:
-        prev = self.dynamic_mode
-        self.dynamic_mode = msg.data
-        self.node.get_logger().info(f"Dinamik mod: {self.dynamic_mode}")
+        raw = msg.data
 
+        # ── 5 art arda aynı değer gelmeden state değişmesin ──────────────────
+        if raw == 1:
+            self.dynamic_one_count  += 1
+            self.dynamic_zero_count  = 0
+        elif raw == 0:
+            self.dynamic_zero_count += 1
+            self.dynamic_one_count   = 0
+        else:
+            self.dynamic_one_count  = 0
+            self.dynamic_zero_count = 0
+
+        self.node.get_logger().info(
+            f"Dinamik engel sayaç → 1: {self.dynamic_one_count}/5  "
+            f"0: {self.dynamic_zero_count}/5  (gelen: {raw})")
+
+        prev = self.dynamic_mode
+
+        if raw == 1 and self.dynamic_one_count >= 5 and self.dynamic_mode != 1:
+            self.dynamic_mode = 1
+        elif raw == 0 and self.dynamic_zero_count >= 5 and self.dynamic_mode != 0:
+            self.dynamic_mode = 0
+        else:
+            return
+
+        self.node.get_logger().info(f"Dinamik mod: {self.dynamic_mode}")
         if self.dynamic_mode == 1 and prev != 1:
             self.dynamic_brake_start_time = (
                 self.node.get_clock().now().nanoseconds * 1e-9
             )
             self.node.get_logger().warn(
                 f"Dinamik engel algılandı — {self.brake_duration}s fren başlatıldı.")
-            
-        if self.dynamic_mode == 0:
-            self.dynmaic_counter += 1 
-        if self.dynamic_mode == 0 and self.is_stopped_for_dynamic and self.dynmaic_counter > 5:
+        if self.dynamic_mode == 0 and self.is_stopped_for_dynamic:
             self.node.get_logger().warn("Engel kalktı. Gaz veriliyor.")
             self._apply_throttle()
-            self.dynmaic_counter = 0
             self.is_stopped_for_dynamic   = False
             self.dynamic_brake_start_time = None
     # ════════════════════════════════════════════════════════════════════════
     # LOW-LEVEL SEND HELPERS
     # ════════════════════════════════════════════════════════════════════════
     def _send_control(self, throttle: float, brake: float) -> None:
-        #ctrl          = CarlaEgoVehicleControl()
-        #ctrl.throttle = float(throttle)
-        #ctrl.brake    = float(brake)
-        #ctrl.steer    = self.current_steer_cmd
-        #self.control_pub.publish(ctrl)
         t_msg      = Int16()
         b_msg      = Int16()
         t_msg.data = self.throttle_int if throttle > 0.0 else 0
@@ -318,29 +330,38 @@ class BrakeManager:
     def _check_traffic_light(self, now: float) -> bool:
         if self.traffic_light_status == 1:
             elapsed = now - (self.traffic_light_brake_start_time or now)
-            if elapsed >= self.red_light_timeout:
-                self.node.get_logger().warn(
-                    f"Kırmızı ışık {self.red_light_timeout}s içinde yeşile dönmedi gaz veriliyor."
-                )
-                self.traffic_light_status            = 0
-                self.traffic_light_brake_start_time  = None
-                self.is_stopped_at_traffic_light     = False
-                self.traffic_light_recently_released = False
-                self._apply_throttle()
-                return True
-
+            # ── 1) Sert fren aşaması ─────────────────────────────────────────
             if elapsed < self.brake_duration:
                 self.is_stopped_at_traffic_light = True
                 self._apply_brake()
                 self.node.get_logger().warn(
-                    f"Trafik ışığı kırmızı — fren {elapsed:.1f}/{self.brake_duration}s "
-                    f"(timeout {elapsed:.1f}/{self.red_light_timeout}s)")
-            else:
-                if self.is_stopped_at_traffic_light:
-                    self.node.get_logger().info(
-                        "Trafik ışığı fren süresi doldu — coast moduna geçildi.")
-                    self.is_stopped_at_traffic_light = False
-                self._apply_coast()
+                    f"Trafik ışığı kırmızı — fren {elapsed:.1f}/{self.brake_duration}s")
+                return True
+            # ── 2) Fren bitti, yeşili bekliyoruz (coast) ─────────────────────
+            if self.is_stopped_at_traffic_light:
+                self.node.get_logger().info(
+                    "Trafik ışığı fren süresi doldu — coast moduna geçildi.")
+                self.is_stopped_at_traffic_light = False
+            # ── 3) Timeout kontrolü: yeşil hâlâ görülmediyse ──────────────────
+            if elapsed >= self.traffic_light_red_timeout:
+                self.node.get_logger().warn(
+                    f"Kırmızı ışıkta {self.traffic_light_red_timeout}s "
+                    f"boyunca yeşil algılanmadı — otomatik gaz veriliyor."
+                )
+                # Trafik ışığı state'ini tamamen sıfırla ki bu fonksiyon
+                # bir daha "meşgul" (True) dönüp diğer öncelikleri (dinamik
+                # engel, park, durak, görev) bloke etmesin.
+                self.traffic_light_status            = 0
+                self.traffic_light_brake_start_time  = None
+                self.traffic_light_recently_released = False
+                self.traffic_light_release_time      = None
+                self._apply_throttle()
+                # False dönerek kontrolü orkestratöre bırakıyoruz; böylece
+                # aynı döngüde başka bir fren noktası (park/durak/görev/
+                # dinamik engel) varsa o öncelik devreye girip gerekirse
+                # tekrar fren uygulayabilir.
+                return False
+            self._apply_coast()
             return True
         if self.traffic_light_recently_released:
             remaining = self.traffic_light_release_delay - (
@@ -420,7 +441,6 @@ class BrakeManager:
             if state["done"]:
                 continue
             tx, ty = point
-            # ── Henüz fren başlamadı → yakınlık kontrolü ────────────────────
             if not state["has_braked"]:
                 if not self._within_station_threshold(cx, cy, tx, ty):
                     continue
@@ -432,7 +452,6 @@ class BrakeManager:
                 state["is_waiting"]      = False
                 self._apply_brake()
                 return True
-            # ── Fren aşaması ────────────────────────────────────────────────
             if not state["is_waiting"]:
                 if now - state["stop_start_time"] < self.brake_duration:
                     self._apply_brake()
@@ -444,11 +463,9 @@ class BrakeManager:
                 state["wait_start_time"] = now
                 self._apply_coast()
                 return True
-            # ── Bekleme aşaması ─────────────────────────────────────────────
             if now - state["wait_start_time"] < self.station_wait_duration:
                 self._apply_coast()
                 return True
-            # ── Durak tamamlandı ─────────────────────────────────────────────
             self.node.get_logger().warn(
                 f"{i + 1}. durak bekleme tamamlandı — devam ediliyor.")
             state["done"]   = True
@@ -456,19 +473,19 @@ class BrakeManager:
             return False
         return False
     def _check_gorev(self, cx: float, cy: float, now: float) -> bool:
+        """Öncelik 5: GeoJSON'dan yüklenen görev noktalarını sırayla kontrol et."""
         for i, ((tx, ty, name), state) in enumerate(
                 zip(self.gorev_points, self.gorev_states)):
             if state["done"]:
                 continue
-            # ── Henüz frenlenmedi → yakınlık kontrolü ───────────────────────
             if not state["has_braked"]:
                 dist_sq = (cx - tx) ** 2 + (cy - ty) ** 2
-                self.node.get_logger().info(
-                    f"[GÖREV DEBUG] araç=({cx:.2f},{cy:.2f}) "
-                    f"hedef={name}({tx:.2f},{ty:.2f}) "
-                    f"mesafe={math.sqrt(dist_sq):.2f}m "
-                    f"eşik={math.sqrt(self.gorev_dist_threshold_sq):.1f}m"
-                )
+                #self.node.get_logger().info(
+                #    f"[GÖREV DEBUG] araç=({cx:.2f},{cy:.2f}) "
+                #    f"hedef={name}({tx:.2f},{ty:.2f}) "
+                #    f"mesafe={math.sqrt(dist_sq):.2f}m "
+                #    f"eşik={math.sqrt(self.gorev_dist_threshold_sq):.1f}m"
+                #)
                 if not self._within_gorev_threshold(cx, cy, tx, ty):
                     continue
                 self.node.get_logger().warn(
@@ -479,7 +496,6 @@ class BrakeManager:
                 state["is_waiting"]      = False
                 self._apply_brake()
                 return True
-            # ── Fren aşaması ─────────────────────────────────────────────────
             if not state["is_waiting"]:
                 if now - state["stop_start_time"] < self.brake_duration:
                     self._apply_brake()
@@ -491,11 +507,9 @@ class BrakeManager:
                 state["wait_start_time"] = now
                 self._apply_coast()
                 return True
-            # ── Bekleme aşaması ───────────────────────────────────────────────
             if now - state["wait_start_time"] < self.gorev_wait_duration:
                 self._apply_coast()
                 return True
-            # ── Görev noktası tamamlandı ──────────────────────────────────────
             self.node.get_logger().warn(
                 f"{name} bekleme tamamlandı — sonraki hedefe devam ediliyor.")
             state["done"] = True
@@ -507,10 +521,10 @@ class BrakeManager:
     def manage_brake(self, current_x: float, current_y: float) -> bool:
         now = self.node.get_clock().now().nanoseconds * 1e-9
         if self._check_gorev(current_x, current_y, now):   return True
-        if self._check_traffic_light(now):                  return True
-        if self._check_dynamic(now):                        return True
-        if self._check_park(current_x, current_y):         return True
-        if self._check_station(current_x, current_y, now): return True
+        if self._check_traffic_light(now):                  return True  # Öncelik 1
+        if self._check_dynamic(now):                        return True  # Öncelik 2
+        if self._check_park(current_x, current_y):         return True  # Öncelik 3
+        if self._check_station(current_x, current_y, now): return True  # Öncelik 4
         self._apply_throttle()
         return False
 # ════════════════════════════════════════════════════════════════════════════
@@ -519,11 +533,6 @@ class BrakeManager:
 class BrakeNode(Node):
     def __init__(self):
         super().__init__('brake_node')
-        # ── Parametre bildirimleri ────────────────────────────────────────────
-        # Tek tek her parametre için declare_parameter + get_parameter yazmak
-        # yerine DEFAULT_PARAMS sözlüğü üzerinde döngü kuruyoruz. Böylece bir
-        # parametrenin default değeri SADECE DEFAULT_PARAMS içinde tanımlı
-        # oluyor; burada ikinci kez hardcoded sayı/string yazmıyoruz.
         for name, default_value in DEFAULT_PARAMS.items():
             self.declare_parameter(name, default_value)
         params = {
