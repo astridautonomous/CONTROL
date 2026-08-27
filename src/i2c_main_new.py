@@ -19,19 +19,18 @@ class BrakeCommandNode(Node):
         self.steer_cmd_left = 0
         self.steer_cmd_right = 0
 
-        # Boylamsal kontrolden gelen anlık throttle değeri (varsayılan 0)
+        #Son gelen fren komutu (1 salık, 2 basık)  
         self.throttle_cmd = 0
-        # Son gelen fren komutu (1 salık, 2 basık)
         self.brake_value = 1
 
         self.subscription_brake = self.create_subscription(
             Int16,
             '/astrid/control/brake_cmd',
             self.brake_callback,
-            10
+            10                   
         )
         self.subscription_steer = self.create_subscription(
-            Float32,
+            Int16,
             '/astrid/control/steer_cmd',
             self.steer_callback,
             10
@@ -49,23 +48,22 @@ class BrakeCommandNode(Node):
         )
 
     def steer_callback(self, msg):
-        self.steer_cmd = msg.data * 10
+        self.steer_cmd = msg.data
         if self.steer_cmd < -255:
             self.steer_cmd = -255
         if self.steer_cmd > 255:
             self.steer_cmd = 255
 
-        if self.steer_cmd < 0:
-            self.steer_cmd_right = int(abs(self.steer_cmd))
+        if self.steer_cmd > 0:
+            self.steer_cmd_right = int(       self.steer_cmd)
             self.steer_cmd_left = 0
-        elif self.steer_cmd > 0:
-            self.steer_cmd_left = int(self.steer_cmd)
+        elif self.steer_cmd < 0:
+            self.steer_cmd_left = int(abs(self.steer_cmd))
             self.steer_cmd_right = 0
-        else:
+        else:                            
             self.steer_cmd_left = 0
             self.steer_cmd_right = 0
 
-        self.get_logger().info(f"Gönderilen steer_cmd: {self.steer_cmd}")
 
     def throttle_callback(self, msg):
         # Boylamsal kontrolün ürettiği güncel throttle değeri
@@ -82,7 +80,7 @@ class BrakeCommandNode(Node):
             power_value = 0
             self.send_i2c(power_value, self.brake_value, self.steer_cmd_right, self.steer_cmd_left)
         elif self.brake_value == 2 and self.throttle_cmd > 0:
-            power_value = 50
+            power_value = self.throttle_cmd
             self.send_i2c(power_value, self.brake_value, self.steer_cmd_right, self.steer_cmd_left)
         else:
             self.get_logger().warn(f"Tanımsız fren komutu alındı: {self.brake_value}")
